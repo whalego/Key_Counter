@@ -135,14 +135,14 @@ class MainWindow():
 
         while True:
             pygame.display.update()
-            screen.fill((100,100,100))
+            screen.fill((100, 100, 100))
 
             call_count = 0
 
-            for key,value in ID_TO_COUNT.items():
-                Key_and_Value = str(key) + ' : ' + str(value)
+            for key, value in ID_TO_COUNT.items():
+                keyAndValue = str(key) + ' : ' + str(value)
                 call_count = call_count + 1
-                self.Txt_Label(Key_and_Value,call_count)
+                self.Txt_Label(keyAndValue, call_count)
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -150,19 +150,19 @@ class MainWindow():
                     sys.exit()
 
     def Txt_Label(self, text, row):
-        sysfont = pygame.font.SysFont(None,18)
-
-        label = sysfont.render(text,True,(0,0,0))
+        sysFont = pygame.font.SysFont(None, 18)
+        label = sysFont.render(text, True, (0, 0, 0))
         column = 0
 
         if row > 80:
             column = 300
-            row = row -80
+            row = row - 80
+
         elif row > 40:
             column = 150
             row = row - 40
 
-        screen.blit(label,(20 + column ,  5 + row  * 11.5  ))
+        screen.blit(label, (20 + column,  5 + row * 11.5))
 
     def Handle_Events(self, args):
         if args.event_type == 'key up':
@@ -175,23 +175,23 @@ class MainWindow():
                 #print (codeKey,codeValue)
 
     def CSV_Setter(self):
-        with open('file.csv', newline='', encoding='utf-8') as csvfile:
-            csv_reader = csv.DictReader(csvfile)
+        with open('file.csv', newline='', encoding='utf-8') as csvFile:
+            csvReader = csv.DictReader(csvFile)
 
-            for row in csv_reader:
+            for row in csvReader:
                 for codeKey, codeValue in ID_TO_COUNT.items():
                     if row['Key'] == codeKey:
                         ID_TO_COUNT[codeKey] = row['Code']
 
 
     def CSV_Writer(self):
-        with open('file.csv', 'w',newline='',encoding='utf-8') as csvfile:
-            fieldnames = ['Key', 'Code']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            for key,value in ID_TO_COUNT.items():
-                writer.writerow({'Key': key, 'Code': value})
+        with open('file.csv', 'w', newline='', encoding='utf-8') as csvFile:
+            fieldNames = ['Key', 'Code']
+            csvWriter = csv.DictWriter(csvFile, fieldnames=fieldNames)
+            csvWriter.writeheader()
 
+            for key, value in ID_TO_COUNT.items():
+                csvWriter.writerow({'Key': key, 'Code': value})
 
 
 if __name__ == '__main__':
