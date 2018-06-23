@@ -4,11 +4,10 @@ from pygame.locals import *
 import sys
 from pyhooked import Hook,KeyboardEvent
 import threading
-import time
 import csv
 import os
 
-SCREEN_SIZE = (500,500)
+SCREEN_SIZE = (500, 500)
 pygame.init()
 screen = pygame.display.set_mode(SCREEN_SIZE)
 
@@ -116,20 +115,20 @@ ID_TO_COUNT = {'Back':0,
 'Oem_5':0,
 'Oem_6':0,
 'Oem_7':0,
-'Ctrl':0,  # merged hotkeys
+'Ctrl':0,
 'Alt':0,
 'Shift':0,
 'Win':0,
 }
 
 class MainWindow():
+
     def __init__(self):
 
         if os.path.isfile('./file.csv'): self.CSV_Setter()
 
-        thread_event = threading.Event()
         hk = Hook()
-        hk.handler = self.handle_events
+        hk.handler = self.Handle_Events
         thread = threading.Thread(target=hk.hook)
         thread.setDaemon(True)
         thread.start()
@@ -143,19 +142,14 @@ class MainWindow():
             for key,value in ID_TO_COUNT.items():
                 Key_and_Value = str(key) + ' : ' + str(value)
                 call_count = call_count + 1
-                self.txt_Label(Key_and_Value,call_count)
+                self.Txt_Label(Key_and_Value,call_count)
 
-            #イベント処理
             for event in pygame.event.get():
                 if event.type == QUIT:
                     self.CSV_Writer()
                     sys.exit()
 
-                if event.type == MOUSEBUTTONDOWN:
-                    #print('click!')
-                    pass
-
-    def txt_Label(self,text,row):
+    def Txt_Label(self, text, row):
         sysfont = pygame.font.SysFont(None,18)
 
         label = sysfont.render(text,True,(0,0,0))
@@ -170,33 +164,33 @@ class MainWindow():
 
         screen.blit(label,(20 + column ,  5 + row  * 11.5  ))
 
-    def handle_events(self,args):
+    def Handle_Events(self, args):
         if args.event_type == 'key up':
-            self.counter(args.current_key)
+            self.Counter(args.current_key)
 
-    def counter(self,code):
-        for codeKey,codeValue in ID_TO_COUNT.items():
+    def Counter(self, code):
+        for codeKey, codeValue in ID_TO_COUNT.items():
             if codeKey == code:
                 ID_TO_COUNT[codeKey] = int(ID_TO_COUNT[codeKey]) + 1
                 #print (codeKey,codeValue)
 
     def CSV_Setter(self):
-        with open('file.csv', newline='' ,encoding='utf-8') as csvfile:
+        with open('file.csv', newline='', encoding='utf-8') as csvfile:
             csv_reader = csv.DictReader(csvfile)
 
             for row in csv_reader:
-                for codeKey,codeValue in ID_TO_COUNT.items():
+                for codeKey, codeValue in ID_TO_COUNT.items():
                     if row['Key'] == codeKey:
                         ID_TO_COUNT[codeKey] = row['Code']
 
 
     def CSV_Writer(self):
-        with open('file.csv','w',newline='',encoding='utf-8') as csvfile:
-            fieldnames = ['Key','Code']
+        with open('file.csv', 'w',newline='',encoding='utf-8') as csvfile:
+            fieldnames = ['Key', 'Code']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for key,value in ID_TO_COUNT.items():
-                writer.writerow({'Key':key,'Code':value})
+                writer.writerow({'Key': key, 'Code': value})
 
 
 
