@@ -149,6 +149,7 @@ class MainWindow():
                     self.CSV_Writer()
                     sys.exit()
 
+
     def Txt_Label(self, text, row):
         sysFont = pygame.font.SysFont(None, 18)
         label = sysFont.render(text, True, (0, 0, 0))
@@ -164,15 +165,18 @@ class MainWindow():
 
         screen.blit(label, (20 + column,  5 + row * 11.5))
 
+
     def Handle_Events(self, args):
         if args.event_type == 'key up':
             self.Counter(args.current_key)
+
 
     def Counter(self, code):
         for codeKey, codeValue in ID_TO_COUNT.items():
             if codeKey == code:
                 ID_TO_COUNT[codeKey] = int(ID_TO_COUNT[codeKey]) + 1
                 #print (codeKey,codeValue)
+
 
     def CSV_Setter(self):
         with open('file.csv', newline='', encoding='utf-8') as csvFile:
